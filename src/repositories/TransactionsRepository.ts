@@ -21,20 +21,37 @@ class TransactionsRepository {
   }
 
   public all(): Transaction[] {
-    // TODO
+    return this.transactions;
   }
 
   public getBalance(): Balance {
-    // TODO
+    let income = 0;
+    let outcome = 0;
+    let total = 0;
+
+    this.transactions.forEach(item => {
+      switch (item.type) {
+        case 'income':
+          income += item.value;
+          break;
+        case 'outcome':
+          outcome += item.value;
+      }
+    });
+
+    total = income - outcome;
+
+    const result = { income, outcome, total }
+
+    return result;
   }
 
-  public create({title, value, type}: RequestDTO): Transaction {
-    const transaction = {
-      id: uuid(),
+  public create({ title, value, type }: RequestDTO): Transaction {
+    const transaction = new Transaction({
       title,
       value,
       type
-    };
+    });
 
     this.transactions.push(transaction);
 

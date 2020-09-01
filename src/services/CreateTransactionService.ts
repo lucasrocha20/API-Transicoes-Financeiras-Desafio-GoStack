@@ -14,7 +14,13 @@ class CreateTransactionService {
     this.transactionsRepository = transactionsRepository;
   }
 
-  public execute({title, value, type}: RequestDTO): Transaction {
+  public execute({ title, value, type }: RequestDTO): Transaction {
+
+    const balance = this.transactionsRepository.getBalance();
+
+    if (type === 'outcome' && value > balance.total) {
+      throw new Error('The amount requested is greater than the total account');
+    }
 
     const transaction = this.transactionsRepository.create({
       title,
